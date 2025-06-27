@@ -25,10 +25,14 @@ def move_files():
     for file in os.listdir():
         if os.path.isfile(file):
             extension = os.path.splitext(file)[1].lower()
+            moved = False
             for category, ext in file_types.items():
                 if extension in ext:
                     shutil.move(file, os.path.join(category, file))
+                    moved = True
                     break
+            if not moved:
+                shutil.move(file, os.path.join("Others", file))
         
 make_folders()
 move_files()
