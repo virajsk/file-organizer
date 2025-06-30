@@ -21,6 +21,28 @@ def make_folders():
         folder_name = category
         os.makedirs(folder_name, exist_ok=True)
 
+def check_existence(filename,folder):
+    directory = os.listdir(folder)
+    files=[]
+    for f in directory:
+        file_path=os.path.join(folder,f)
+        if os.path.isfile(file_path):
+            files.append(f)
+    for f in files:
+        if filename==f:
+            return True
+    return False
+
+def rename(filename, folder):
+    file, ext = os.path.splitext(filename)
+    count = 1
+    new_name = filename
+    while check_existence(new_name, folder):
+        new_name=f"{file}_{count}{ext}"
+        count+=1
+    return new_name
+
+
 def move_files():
     for file in os.listdir():
         if os.path.isfile(file):
@@ -28,11 +50,13 @@ def move_files():
             moved = False
             for category, ext in file_types.items():
                 if extension in ext:
-                    shutil.move(file, os.path.join(category, file))
+                    file_name_to_use = rename(file, category)
+                    shutil.move(file, os.path.join(category, file_name_to_use))
                     moved = True
                     break
             if not moved:
-                shutil.move(file, os.path.join("Others", file))
+                file_name_to_use = rename(file, "Others")
+                shutil.move(file, os.path.join("Others", file_name_to_use))
         
 make_folders()
 move_files()

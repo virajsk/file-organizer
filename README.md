@@ -7,6 +7,7 @@ This Python script helps you organize files in a directory by automatically sort
 - Automatically creates folders for common file types:
   - Images, Videos, Audio, Documents, Archives, Executables, Code, Fonts, Design files, Ebooks, Spreadsheets
 - Moves files into the appropriate folder based on their extension
+- Renames files if they already exist in the target folder to avoid overwrite
 - Ignores directories and only organizes files
 
 ## Supported Categories and Extensions
