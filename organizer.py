@@ -1,5 +1,6 @@
 import os
 import shutil
+import re
 
 file_types = {
     "Images": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp"],
@@ -15,6 +16,8 @@ file_types = {
     "Spreadsheets": [".csv", ".xls", ".xlsx", ".ods"],
     "Others": []
 }
+
+script_name = os.path.basename(__file__)
 
 def make_folders():
     for category, ext in file_types.items():
@@ -35,17 +38,26 @@ def check_existence(filename,folder):
 
 def rename(filename, folder):
     file, ext = os.path.splitext(filename)
-    count = 1
+    pattern = re.compile(r"^(.*?)(\((\d+)\))?$")
+    match = pattern.match(file)
+
+    if match:
+        base_name = match.group(1).strip()
+        count = int(match.group(3)) if match.group(3) else 1
+    else:
+        base_name=file
+        count=1
+
     new_name = filename
     while check_existence(new_name, folder):
-        new_name=f"{file}_{count}{ext}"
+        new_name=f"{base_name}({count}){ext}"
         count+=1
     return new_name
 
 
 def move_files():
     for file in os.listdir():
-        if os.path.isfile(file):
+        if os.path.isfile(file) and file != script_name:
             extension = os.path.splitext(file)[1].lower()
             moved = False
             for category, ext in file_types.items():
